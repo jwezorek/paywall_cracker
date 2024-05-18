@@ -129,24 +129,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="chrome.h" />
-    <ClInclude Include="cracker_thread.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="paywall_cracker.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="resources\Resource.h" />
+    <ClInclude Include="src\chrome.h" />
+    <ClInclude Include="src\cracker_thread.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="chrome.cpp" />
-    <ClCompile Include="cracker_thread.cpp" />
     <ClCompile Include="paywall_cracker.cpp" />
+    <ClCompile Include="src\chrome.cpp" />
+    <ClCompile Include="src\cracker_thread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="PaywallCracker.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="PaywallCracker.ico" />
-    <Image Include="small.ico" />
+    <ResourceCompile Include="resources\PaywallCracker.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

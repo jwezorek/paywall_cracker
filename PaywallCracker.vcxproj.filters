@@ -5,57 +5,39 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{03a5a082-e1c9-49ef-aedf-1b5b8e75fab3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="resources\Resource.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\chrome.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="paywall_cracker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="chrome.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cracker_thread.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\cracker_thread.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="paywall_cracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="chrome.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\chrome.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="cracker_thread.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\cracker_thread.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="PaywallCracker.rc">
+    <ResourceCompile Include="resources\PaywallCracker.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="PaywallCracker.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>

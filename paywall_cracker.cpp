@@ -1,7 +1,6 @@
-#include "framework.h"
-#include "paywall_cracker.h"
-#include "cracker_thread.h"
-#include "chrome.h"
+#include "resources/Resource.h"
+#include "src/cracker_thread.h"
+#include "src/chrome.h"
 #include <tuple>
 #include <string>
 #include <thread>
