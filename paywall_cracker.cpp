@@ -1,6 +1,4 @@
-#include "resources/Resource.h"
-#include "src/cracker_thread.h"
-#include "src/chrome.h"
+
 #include "src/gui.h"
 #include <tuple>
 #include <string>
