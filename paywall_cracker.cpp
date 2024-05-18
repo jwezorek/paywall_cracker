@@ -8,21 +8,16 @@
 #include <chrono>
 #include <atomic>     
 
-
-
 int APIENTRY WinMain(_In_ HINSTANCE hInstance,
         _In_opt_ HINSTANCE hPrevInstance,
         _In_ LPSTR lpCmdLine,
         _In_ int nCmdShow) {
 
     constexpr int MAX_LOADSTRING = 100;
-    CHAR szTitle[MAX_LOADSTRING];
-    CHAR szWindowClass[MAX_LOADSTRING];
-    LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadString(hInstance, IDC_PAYWALLCRACKER, szWindowClass, MAX_LOADSTRING);
+    constexpr const char* wnd_class = "paywall_cracker_class";
 
-    register_main_window(hInstance, szWindowClass);
-    if (!init_instance(hInstance, nCmdShow, szWindowClass, szTitle)) {
+    register_main_window(hInstance, wnd_class);
+    if (!init_instance(hInstance, nCmdShow, wnd_class, "paywall cracker")) {
         return FALSE;
     }
 

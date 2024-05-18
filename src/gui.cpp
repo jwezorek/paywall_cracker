@@ -11,7 +11,7 @@ constexpr int k_default_count = 3;
 
 HINSTANCE g_inst;
 
-ATOM register_main_window(HINSTANCE hInstance, CHAR szWindowClass[])
+ATOM register_main_window(HINSTANCE hInstance, const std::string& wnd_class)
 {
     WNDCLASSEX wcex;
 
@@ -26,16 +26,20 @@ ATOM register_main_window(HINSTANCE hInstance, CHAR szWindowClass[])
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_3DFACE + 1);
     wcex.lpszMenuName = 0;
-    wcex.lpszClassName = szWindowClass;
+
+    char wc[255];
+    strcpy_s(&wc[0], 255, wnd_class.c_str());
+    wcex.lpszClassName = wc;
+
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassEx(&wcex);
 }
 
-BOOL init_instance(HINSTANCE hInstance, int nCmdShow, CHAR szWindowClass[], CHAR szTitle[])
-{
+BOOL init_instance(HINSTANCE hInstance, int nCmdShow,
+        const std::string& wnd_class, const std::string& title) {
     g_inst = hInstance;
-    HWND hWnd = CreateWindow(szWindowClass, szTitle, WS_POPUPWINDOW | WS_CAPTION,
+    HWND hWnd = CreateWindow(wnd_class.c_str(), title.c_str(), WS_POPUPWINDOW | WS_CAPTION,
         CW_USEDEFAULT, CW_USEDEFAULT, 200, 250, nullptr, nullptr, hInstance, nullptr);
 
     if (!hWnd)
