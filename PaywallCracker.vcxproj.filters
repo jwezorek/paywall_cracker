@@ -9,7 +9,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="src">
+    <Filter Include="Source Files\src">
       <UniqueIdentifier>{03a5a082-e1c9-49ef-aedf-1b5b8e75fab3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -18,13 +18,13 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="src\chrome.h">
-      <Filter>src</Filter>
+      <Filter>Source Files\src</Filter>
     </ClInclude>
     <ClInclude Include="src\cracker_thread.h">
-      <Filter>src</Filter>
+      <Filter>Source Files\src</Filter>
     </ClInclude>
     <ClInclude Include="src\gui.h">
-      <Filter>src</Filter>
+      <Filter>Source Files\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -32,13 +32,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\chrome.cpp">
-      <Filter>src</Filter>
+      <Filter>Source Files\src</Filter>
     </ClCompile>
     <ClCompile Include="src\cracker_thread.cpp">
-      <Filter>src</Filter>
+      <Filter>Source Files\src</Filter>
     </ClCompile>
     <ClCompile Include="src\gui.cpp">
-      <Filter>src</Filter>
+      <Filter>Source Files\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
