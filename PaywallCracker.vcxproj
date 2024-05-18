@@ -132,11 +132,13 @@
     <ClInclude Include="resources\Resource.h" />
     <ClInclude Include="src\chrome.h" />
     <ClInclude Include="src\cracker_thread.h" />
+    <ClInclude Include="src\gui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="paywall_cracker.cpp" />
     <ClCompile Include="src\chrome.cpp" />
     <ClCompile Include="src\cracker_thread.cpp" />
+    <ClCompile Include="src\gui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources\PaywallCracker.rc" />

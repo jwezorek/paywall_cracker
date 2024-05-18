@@ -23,6 +23,9 @@
     <ClInclude Include="src\cracker_thread.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\gui.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="paywall_cracker.cpp">
@@ -32,6 +35,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\cracker_thread.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
