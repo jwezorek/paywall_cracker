@@ -13,9 +13,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
         _In_ LPSTR lpCmdLine,
         _In_ int nCmdShow) {
 
-    constexpr int MAX_LOADSTRING = 100;
     constexpr const char* wnd_class = "paywall_cracker_class";
-
     register_main_window(hInstance, wnd_class);
     if (!init_instance(hInstance, nCmdShow, wnd_class, "paywall cracker")) {
         return FALSE;
