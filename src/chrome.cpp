@@ -33,12 +33,5 @@ namespace {
 std::vector<HWND> pwc::find_all_toplevel_chrome_windows() {
     std::vector<HWND> windows;
     EnumWindows(enum_wnd_proc, reinterpret_cast<LPARAM>(&windows));
-
-    for (auto wnd : windows) {
-        RECT r;
-        GetWindowRect(wnd, &r);
-        bool visible = IsWindowVisible(wnd);
-    }
-
     return windows;
 }
