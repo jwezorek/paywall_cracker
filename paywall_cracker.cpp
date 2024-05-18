@@ -7,61 +7,45 @@
 #include <chrono>
 #include <atomic>
 
-#define MAX_LOADSTRING 100
+HINSTANCE g_hInst;            
 
-HINSTANCE hInst;                                
-CHAR szTitle[MAX_LOADSTRING];                
-CHAR szWindowClass[MAX_LOADSTRING]; 
+constexpr int MAX_LOADSTRING = 100;
 
-ATOM register_main_window(HINSTANCE hInstance);
-BOOL init_instance(HINSTANCE, int);
+ATOM register_main_window(HINSTANCE hInstance, CHAR szWindowClass[]);
+BOOL init_instance(HINSTANCE hInstance, int nCmdShow, CHAR szWindowClass[], CHAR szTitle[]);
 LRESULT CALLBACK wnd_proc(HWND, UINT, WPARAM, LPARAM);
 
-int64_t k_button_id = 103;
-int k_default_preamble = 300;
-int k_default_interval = 80;
-int k_default_count = 3;
+constexpr int64_t k_button_id = 103;
+constexpr int k_default_preamble = 300;
+constexpr int k_default_interval = 80;
+constexpr int k_default_count = 3;
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-
-    // TODO: Place code here.
-
-    // Initialize global strings
+    CHAR szTitle[MAX_LOADSTRING];
+    CHAR szWindowClass[MAX_LOADSTRING];
     LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadString(hInstance, IDC_PAYWALLCRACKER, szWindowClass, MAX_LOADSTRING);
-    register_main_window(hInstance);
+    register_main_window(hInstance, szWindowClass);
 
-    // Perform application initialization:
-    if (!init_instance (hInstance, nCmdShow))
-    {
+    if (!init_instance (hInstance, nCmdShow, szWindowClass, szTitle)) {
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PAYWALLCRACKER));
-
     MSG msg;
-
-    // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
+    while (GetMessage(&msg, nullptr, 0, 0)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
 
-    return (int) msg.wParam;
+    return 0;
 }
 
 
-ATOM register_main_window(HINSTANCE hInstance)
+ATOM register_main_window(HINSTANCE hInstance, CHAR szWindowClass[])
 {
     WNDCLASSEX wcex;
 
@@ -82,9 +66,9 @@ ATOM register_main_window(HINSTANCE hInstance)
     return RegisterClassEx(&wcex);
 }
 
-BOOL init_instance(HINSTANCE hInstance, int nCmdShow)
+BOOL init_instance(HINSTANCE hInstance, int nCmdShow, CHAR szWindowClass[], CHAR szTitle[])
 {
-   hInst = hInstance; 
+   g_hInst = hInstance; 
 
    HWND hWnd = CreateWindow(szWindowClass, szTitle, WS_POPUPWINDOW | WS_CAPTION,
       CW_USEDEFAULT, CW_USEDEFAULT, 200, 250, nullptr, nullptr, hInstance, nullptr);
@@ -101,8 +85,23 @@ BOOL init_instance(HINSTANCE hInstance, int nCmdShow)
 }
 
 HWND create_labeled_edit_ctrl(HWND parent, const char* txt, int x, int y, int wd, int row_hgt) {
-    CreateWindow("static", txt, WS_CHILD | WS_VISIBLE, x, y, wd, row_hgt, parent, (HMENU) 101, hInst, NULL);
-    return CreateWindowEx(WS_EX_CLIENTEDGE, "edit", "0", WS_CHILD | WS_VISIBLE | ES_NUMBER, x, y+row_hgt, wd, row_hgt, parent, (HMENU)102, hInst, NULL);
+    CreateWindow(
+        "static", 
+        txt, 
+        WS_CHILD | WS_VISIBLE,
+        x, y, wd, row_hgt, 
+        parent, (HMENU) 101, 
+        g_hInst, 
+        NULL
+    );
+    return CreateWindowEx(
+        WS_EX_CLIENTEDGE, "edit", "0", 
+        WS_CHILD | WS_VISIBLE | ES_NUMBER, 
+        x, y+row_hgt, wd, row_hgt, parent, 
+        (HMENU)102, 
+        g_hInst, 
+        NULL
+    );
 }
 
 void set_edit_value(HWND ctrl, int val) {
@@ -129,9 +128,16 @@ std::tuple<HWND, HWND, HWND, HWND> create_ctrls(HWND parent) {
     auto count = create_labeled_edit_ctrl(parent, "count", 
         x, y + 4 * k_row_hgt + 2*k_space_hgt, wd, k_row_hgt);
 
-    auto btn = CreateWindow("button", "crack it", WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE, 
-        x, y + 6 * k_row_hgt + 3 * k_space_hgt, wd, k_row_hgt, parent, 
-        reinterpret_cast<HMENU>(k_button_id), hInst, NULL);
+    auto btn = CreateWindow(
+        "button", 
+        "crack it",
+        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE, 
+        x, y + 6 * k_row_hgt + 3 * k_space_hgt, wd, k_row_hgt, 
+        parent, 
+        reinterpret_cast<HMENU>(k_button_id), 
+        g_hInst, 
+        NULL
+    );
 
     set_edit_value(preamble, k_default_preamble);
     set_edit_value(interval, k_default_interval);
