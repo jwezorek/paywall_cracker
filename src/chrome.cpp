@@ -30,7 +30,7 @@ namespace {
 }
 
 // Function to find all top-level Chrome windows
-std::vector<HWND> find_all_toplevel_chrome_windows() {
+std::vector<HWND> pwc::find_all_toplevel_chrome_windows() {
     std::vector<HWND> windows;
     EnumWindows(enum_wnd_proc, reinterpret_cast<LPARAM>(&windows));
 

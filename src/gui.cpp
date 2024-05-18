@@ -77,7 +77,7 @@ namespace {
 
     LRESULT CALLBACK wnd_proc(HWND wnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
-        static state state(wnd);
+        static pwc::state state(wnd);
 
         switch (message) {
         case WM_CREATE: {
@@ -93,7 +93,7 @@ namespace {
         case WM_DESTROY:
             PostQuitMessage(0);
             break;
-        case MSG_COMPLETE:
+        case pwc::MSG_COMPLETE:
             handle_thread_complete(state);
             break;
         default:
@@ -103,7 +103,7 @@ namespace {
     }
 }
 
-ATOM register_main_window(HINSTANCE hInstance, const std::string& wnd_class)
+ATOM pwc::register_main_window(HINSTANCE hInstance, const std::string& wnd_class)
 {
     WNDCLASSEX wcex;
 
@@ -128,7 +128,7 @@ ATOM register_main_window(HINSTANCE hInstance, const std::string& wnd_class)
     return RegisterClassEx(&wcex);
 }
 
-BOOL init_instance(HINSTANCE hInstance, int nCmdShow,
+BOOL pwc::init_instance(HINSTANCE hInstance, int nCmdShow,
     const std::string& wnd_class, const std::string& title) {
     g_inst = hInstance;
     HWND hWnd = CreateWindow(wnd_class.c_str(), title.c_str(), WS_POPUPWINDOW | WS_CAPTION,

@@ -3,4 +3,8 @@
 #include <vector>
 #include <Windows.h>
 
-std::vector<HWND> find_all_toplevel_chrome_windows();
+namespace pwc {
+
+    std::vector<HWND> find_all_toplevel_chrome_windows();
+
+}

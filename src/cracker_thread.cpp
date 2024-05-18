@@ -16,7 +16,7 @@ namespace {
             );
     }
 
-    bool pass_time(int duration, state& state) {
+    bool pass_time(int duration, pwc::state& state) {
         auto begin = chron::steady_clock::now();
         while (ellapsed_milliseconds(begin) < duration) {
             if (state.cancelled()) {
@@ -48,26 +48,6 @@ namespace {
         SendInput(1, &input[1], sizeof(INPUT));
     }
 
-    void thread_body(state* state) {
-        state->handle_start_of_thread();
-
-        simulate_key_press(VK_F5, k_keypress_duration);
-        if (!pass_time(state->preamble(), *state)) {
-            state->handle_end_of_thread();
-            return;
-        }
-
-        for (int i = 0; i < state->count(); ++i) {
-            simulate_key_press(VK_ESCAPE, k_keypress_duration);
-            if (!pass_time(state->interval(), *state)) {
-                state->handle_end_of_thread();
-                return;
-            }
-        }
-
-        state->handle_end_of_thread();
-    }
-
     int get_edit_value(HWND ctrl) {
         char buffer[32];
         GetWindowText(ctrl, buffer, 32);
@@ -78,7 +58,7 @@ namespace {
 
 /*--------------------------------------------------------------------------------------*/
 
-state::state(HWND wnd) :
+pwc::state::state(HWND wnd) :
     wnd_{ wnd },
     preamble_ctrl_{ NULL },
     interval_ctrl_{ NULL },
@@ -89,40 +69,37 @@ state::state(HWND wnd) :
     cancelled_{ false }
 {}
 
-void state::set_ctrls(HWND preamble, HWND interval, HWND count, HWND btn) {
+void pwc::state::set_ctrls(HWND preamble, HWND interval, HWND count, HWND btn) {
     preamble_ctrl_ = preamble;
     interval_ctrl_ = interval;
     count_ctrl_ = count;
     btn_ = btn;
 }
-void state::set_chrome_wnd(HWND wnd) {
-    chrome_wnd_ = wnd;
-}
 
-bool state::is_running() const {
+bool pwc::state::is_running() const {
     return is_running_;
 }
 
-void state::set_cancelled() {
+void pwc::state::set_cancelled() {
     cancelled_ = true;
 }
 
-void state::handle_start_of_thread() {
+void pwc::state::handle_start_of_thread() {
     cancelled_ = false;
     is_running_ = true;
     SetForegroundWindow(chrome_wnd_);
 }
 
-void state::handle_end_of_thread() {
+void pwc::state::handle_end_of_thread() {
     is_running_ = false;
     PostMessage(wnd_, MSG_COMPLETE, 0, 0);
 }
 
-void state::wait_for_thread() {
+void pwc::state::wait_for_thread() {
     thread_.join();
 }
 
-void state::launch_thread() {
+void pwc::state::launch_thread() {
     SetWindowText(btn_, "cancel");
     auto chrome = find_all_toplevel_chrome_windows();
 
@@ -146,29 +123,37 @@ void state::launch_thread() {
     );
 }
 
-HWND state::button() const {
+HWND pwc::state::button() const {
     return btn_;
 }
 
-bool state::cancelled() const {
+bool pwc::state::cancelled() const {
     return cancelled_;
 }
 
-int state::preamble() const {
-    return preamble_;
-}
+void pwc::state::thread_body(pwc::state* state) {
+    state->handle_start_of_thread();
 
-int state::interval() const {
-    return interval_;
-}
+    simulate_key_press(VK_F5, k_keypress_duration);
+    if (!pass_time(state->preamble_, *state)) {
+        state->handle_end_of_thread();
+        return;
+    }
 
-int state::count() const {
-    return count_;
+    for (int i = 0; i < state->count_; ++i) {
+        simulate_key_press(VK_ESCAPE, k_keypress_duration);
+        if (!pass_time(state->interval_, *state)) {
+            state->handle_end_of_thread();
+            return;
+        }
+    }
+
+    state->handle_end_of_thread();
 }
 
 /*--------------------------------------------------------------------------------------*/
 
-void handle_button_click(state& state) {
+void pwc::handle_button_click(state& state) {
     if (state.is_running()) {
         state.set_cancelled();
     } else {
@@ -176,7 +161,7 @@ void handle_button_click(state& state) {
     }
 }
 
-void handle_thread_complete(state& state)
+void pwc::handle_thread_complete(state& state)
 {
     state.wait_for_thread();
     SetWindowText(state.button(), "crack it");
