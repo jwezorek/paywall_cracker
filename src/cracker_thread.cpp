@@ -124,7 +124,7 @@ void state::wait_for_thread() {
 
 void state::launch_thread() {
     SetWindowText(btn_, "cancel");
-    auto chrome = FindAllChromeWindows();
+    auto chrome = find_all_toplevel_chrome_windows();
 
     if (chrome.size() != 1) {
         MessageBox(wnd_,

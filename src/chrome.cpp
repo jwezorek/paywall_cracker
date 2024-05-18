@@ -4,7 +4,7 @@
 
 namespace {
 
-    bool IsChromeWindow(HWND hwnd) {
+    bool is_chrome_window(HWND hwnd) {
         const int length = 256;
         char class_name[length] = { 0 };
         GetClassName(hwnd, class_name, length);
@@ -19,9 +19,9 @@ namespace {
     }
 
     // Callback function to be called for each top-level window
-    BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
+    BOOL CALLBACK enum_wnd_proc(HWND hwnd, LPARAM lParam) {
         std::vector<HWND>* pWindows = reinterpret_cast<std::vector<HWND>*>(lParam);
-        if (IsChromeWindow(hwnd)) {
+        if (is_chrome_window(hwnd)) {
             pWindows->push_back(hwnd);
         }
         return TRUE; // Continue enumeration
@@ -30,9 +30,9 @@ namespace {
 }
 
 // Function to find all top-level Chrome windows
-std::vector<HWND> FindAllChromeWindows() {
+std::vector<HWND> find_all_toplevel_chrome_windows() {
     std::vector<HWND> windows;
-    EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(&windows));
+    EnumWindows(enum_wnd_proc, reinterpret_cast<LPARAM>(&windows));
 
     for (auto wnd : windows) {
         RECT r;
