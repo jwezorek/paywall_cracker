@@ -1,10 +1,5 @@
 
 #include "src/gui.h"
-#include <tuple>
-#include <string>
-#include <thread>
-#include <chrono>
-#include <atomic>     
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance,
         _In_opt_ HINSTANCE hPrevInstance,

@@ -1,6 +1,7 @@
 #include "cracker_thread.h"
 #include "chrome.h"
 #include <chrono>
+#include <string>
 
 namespace chron = std::chrono;
 
