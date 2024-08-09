@@ -100,14 +100,7 @@ void pwc::state::set_ctrls(HWND preamble, HWND interval, HWND pulse, HWND btn) {
 
 void pwc::state::toggle_check_state() {
     auto check_state = SendMessage(pulse_mode_ctrl_, BM_GETCHECK, 0, 0);
-
-    auto msg = std::format("before: current state => {}\n", check_state);
-    OutputDebugStringA(msg.c_str());
-
     SendMessage(pulse_mode_ctrl_, BM_SETCHECK, !check_state, 0);
-
-    msg = std::format("after: current state => {}\n", SendMessage(pulse_mode_ctrl_, BM_GETCHECK, 0, 0));
-    OutputDebugStringA(msg.c_str());
 }
 
 void pwc::state::set_font(HFONT font) {
