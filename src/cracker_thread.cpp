@@ -2,12 +2,15 @@
 #include "chrome.h"
 #include <chrono>
 #include <string>
+#include <format>
+#include <limits>
 
 namespace chron = std::chrono;
 
 namespace {
 
     constexpr DWORD k_keypress_duration = 15;
+    constexpr DWORD k_repetitions_in_pulse_mode = 4;
     constexpr auto k_crack_it_str = "crack it";
     constexpr auto k_cancel_str = "cancel";
     constexpr auto k_unique_chrome_window_str = "Could not find a unique Chrome window";
@@ -29,6 +32,14 @@ namespace {
             }
         }
         return true;
+    }
+
+    BOOL CALLBACK ChangeFont(HWND hwndChild, LPARAM lParam)
+    {
+        HFONT hFont = (HFONT)lParam;
+        SendMessage(hwndChild, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+        return TRUE;
     }
 
     void simulate_key_press(UINT virtualKeyCode, DWORD duration) {
@@ -59,6 +70,11 @@ namespace {
         return std::stoi(buffer);
     }
 
+    bool get_check_value(HWND ctrl) {
+        LRESULT chk_state = SendMessage(ctrl, BM_GETCHECK, 0, 0);
+        return (chk_state == BST_CHECKED);
+    }
+
 }
 
 /*--------------------------------------------------------------------------------------*/
@@ -67,18 +83,40 @@ pwc::state::state(HWND wnd) :
     wnd_{ wnd },
     preamble_ctrl_{ NULL },
     interval_ctrl_{ NULL },
-    count_ctrl_{ NULL },
+    pulse_mode_ctrl_{ NULL },
     btn_{ NULL },
     chrome_wnd_{ NULL },
     is_running_{ false },
-    cancelled_{ false }
+    cancelled_{ false },
+    font_{ NULL }
 {}
 
-void pwc::state::set_ctrls(HWND preamble, HWND interval, HWND count, HWND btn) {
+void pwc::state::set_ctrls(HWND preamble, HWND interval, HWND pulse, HWND btn) {
     preamble_ctrl_ = preamble;
     interval_ctrl_ = interval;
-    count_ctrl_ = count;
+    pulse_mode_ctrl_ = pulse;
     btn_ = btn;
+}
+
+void pwc::state::toggle_check_state() {
+    auto check_state = SendMessage(pulse_mode_ctrl_, BM_GETCHECK, 0, 0);
+
+    auto msg = std::format("before: current state => {}\n", check_state);
+    OutputDebugStringA(msg.c_str());
+
+    SendMessage(pulse_mode_ctrl_, BM_SETCHECK, !check_state, 0);
+
+    msg = std::format("after: current state => {}\n", SendMessage(pulse_mode_ctrl_, BM_GETCHECK, 0, 0));
+    OutputDebugStringA(msg.c_str());
+}
+
+void pwc::state::set_font(HFONT font) {
+    font_ = font;
+    EnumChildWindows(wnd_, ChangeFont, (LPARAM)font);
+}
+
+HFONT pwc::state::font() const {
+    return font_;
 }
 
 bool pwc::state::is_running() const {
@@ -121,7 +159,9 @@ void pwc::state::launch_thread() {
 
     preamble_ = get_edit_value( preamble_ctrl_ );
     interval_ = get_edit_value(interval_ctrl_);
-    count_ = get_edit_value(count_ctrl_);
+    count_ = get_check_value(pulse_mode_ctrl_) ? 
+        k_repetitions_in_pulse_mode : 
+        std::numeric_limits<int>::max();
 
     thread_ = std::thread(
         thread_body,
@@ -159,7 +199,7 @@ void pwc::state::thread_body(pwc::state* state) {
 
 /*--------------------------------------------------------------------------------------*/
 
-void pwc::handle_button_click(state& state) {
+void pwc::handle_main_button_click(state& state) {
     if (state.is_running()) {
         state.set_cancelled();
     } else {

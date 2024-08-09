@@ -6,10 +6,13 @@
 
 namespace {
 
-    constexpr int64_t k_button_id = 103;
-    constexpr int k_default_preamble = 30;
-    constexpr int k_default_interval = 80;
-    constexpr int k_default_count = 30;
+    constexpr int64_t k_pulse_button_id = 103;
+    constexpr int64_t k_main_button_id = 104;
+    constexpr int k_default_preamble = 130;
+    constexpr int k_default_interval = 65;
+    constexpr auto k_preamble_str = "preamble duration";
+    constexpr auto k_interval_str = "interval duration";
+    constexpr auto k_pulse_mode_str = "pulse mode";
 
     HINSTANCE g_inst;
 
@@ -33,6 +36,17 @@ namespace {
         );
     }
 
+    HWND create_labeled_checkbox(HWND parent, const char* txt, int x, int y, int wd, int row_hgt, HINSTANCE inst) {
+        return CreateWindowEx(
+            0, "button", txt,
+            WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
+            x, y + row_hgt, wd, row_hgt, parent,
+            reinterpret_cast<HMENU>(k_pulse_button_id),
+            inst,
+            NULL
+        );
+    }
+
     void set_edit_value(HWND ctrl, int val) {
         auto str = std::to_string(val);
         SetWindowText(ctrl, str.c_str());
@@ -50,29 +64,28 @@ namespace {
         auto y = r.top + k_marg;
         auto wd = r.right - r.left - 2 * k_marg;
 
-        auto preamble = create_labeled_edit_ctrl(parent, "preamble duration",
+        auto preamble = create_labeled_edit_ctrl(parent, k_preamble_str,
             x, y, wd, k_row_hgt, h_inst);
-        auto interval = create_labeled_edit_ctrl(parent, "interval duration",
+        auto interval = create_labeled_edit_ctrl(parent, k_interval_str,
             x, y + 2 * k_row_hgt + k_space_hgt, wd, k_row_hgt, h_inst);
-        auto count = create_labeled_edit_ctrl(parent, "count",
-            x, y + 4 * k_row_hgt + 2 * k_space_hgt, wd, k_row_hgt, h_inst);
+        auto pulse = create_labeled_checkbox(parent, k_pulse_mode_str,
+            x, y + 3 * k_row_hgt + k_space_hgt + k_marg, wd, k_row_hgt, h_inst);
 
         auto btn = CreateWindow(
             "button",
             "crack it",
             WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-            x, y + 6 * k_row_hgt + 3 * k_space_hgt, wd, k_row_hgt,
+            x, y + 5 * k_row_hgt + 3 * k_space_hgt, wd, k_row_hgt,
             parent,
-            reinterpret_cast<HMENU>(k_button_id),
+            reinterpret_cast<HMENU>(k_main_button_id),
             h_inst,
             NULL
         );
 
         set_edit_value(preamble, k_default_preamble);
         set_edit_value(interval, k_default_interval);
-        set_edit_value(count, k_default_count);
 
-        return { preamble, interval, count, btn };
+        return { preamble, interval, pulse, btn };
     }
 
     LRESULT CALLBACK wnd_proc(HWND wnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -81,15 +94,22 @@ namespace {
 
         switch (message) {
         case WM_CREATE: {
-            auto [preamble, interval, count, btn] = create_ctrls(wnd, g_inst);
-            state.set_ctrls(preamble, interval, count, btn);
+            auto [preamble, interval, pulse, btn] = create_ctrls(wnd, g_inst);
+            state.set_ctrls(preamble, interval, pulse, btn);
         }
                       break;
         case WM_COMMAND:
-            if (LOWORD(wParam) == k_button_id) {
-                handle_button_click(state);
-            }
+            if (LOWORD(wParam) == k_main_button_id) {
+                handle_main_button_click(state);
+            } 
             break;
+
+        case WM_SETFONT: {
+            auto result = DefWindowProc(wnd, message, wParam, lParam);
+            state.set_font(reinterpret_cast<HFONT>(wParam));
+            return result;
+        }
+
         case WM_DESTROY:
             PostQuitMessage(0);
             break;
@@ -128,11 +148,13 @@ ATOM pwc::register_main_window(HINSTANCE hInstance, const std::string& wnd_class
     return RegisterClassEx(&wcex);
 }
 
-BOOL pwc::init_instance(HINSTANCE hInstance, int nCmdShow,
+BOOL pwc::init_instance(HINSTANCE hInstance, int nCmdShow, HFONT font,
     const std::string& wnd_class, const std::string& title) {
     g_inst = hInstance;
     HWND hWnd = CreateWindow(wnd_class.c_str(), title.c_str(), WS_POPUPWINDOW | WS_CAPTION,
-        CW_USEDEFAULT, CW_USEDEFAULT, 200, 250, nullptr, nullptr, hInstance, nullptr);
+        CW_USEDEFAULT, CW_USEDEFAULT, 200, 220, nullptr, nullptr, hInstance, nullptr);
+
+    SendMessage(hWnd, WM_SETFONT, reinterpret_cast<WPARAM>(font), 0);
 
     if (!hWnd)
     {

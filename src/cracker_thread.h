@@ -1,5 +1,6 @@
 #pragma once
 
+#define NOMINMAX
 #include <Windows.h>
 #include <atomic>
 #include <thread>
@@ -13,9 +14,10 @@ namespace pwc {
         HWND wnd_;
         HWND preamble_ctrl_;
         HWND interval_ctrl_;
-        HWND count_ctrl_;
+        HWND pulse_mode_ctrl_;
         HWND btn_;
         HWND chrome_wnd_;
+        HFONT font_;
         std::atomic<bool> is_running_;
         std::atomic<bool> cancelled_;
         std::thread thread_;
@@ -29,7 +31,10 @@ namespace pwc {
 
     public:
         state(HWND wnd);
-        void set_ctrls(HWND preamble, HWND interval, HWND count, HWND btn);
+        void set_ctrls(HWND preamble, HWND interval, HWND pulse, HWND btn);
+        void toggle_check_state();
+        void set_font(HFONT font);
+        HFONT font() const;
         bool is_running() const;
         void set_cancelled();
         void wait_for_thread();
@@ -38,6 +43,6 @@ namespace pwc {
         bool cancelled() const;
     };
 
-    void handle_button_click(state& state);
+    void handle_main_button_click(state& state);
     void handle_thread_complete(state& state);
 }
