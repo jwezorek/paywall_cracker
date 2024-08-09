@@ -8,6 +8,10 @@ namespace chron = std::chrono;
 namespace {
 
     constexpr DWORD k_keypress_duration = 15;
+    constexpr auto k_crack_it_str = "crack it";
+    constexpr auto k_cancel_str = "cancel";
+    constexpr auto k_unique_chrome_window_str = "Could not find a unique Chrome window";
+    constexpr auto k_err_msg = "paywall cracker error";
 
     int ellapsed_milliseconds(chron::steady_clock::time_point begin) {
         return static_cast<int>(
@@ -101,15 +105,16 @@ void pwc::state::wait_for_thread() {
 }
 
 void pwc::state::launch_thread() {
-    SetWindowText(btn_, "cancel");
+    SetWindowText(btn_, k_cancel_str);
     auto chrome = find_all_toplevel_chrome_windows();
 
     if (chrome.size() != 1) {
         MessageBox(wnd_,
-            "Could not find a unique Chrome window",
-            "paywall cracker error",
+            k_unique_chrome_window_str,
+            k_err_msg,
             MB_OK | MB_ICONERROR
         );
+        SetWindowText(btn_, k_crack_it_str);
         return;
     }
     chrome_wnd_ = chrome.front();
@@ -165,5 +170,5 @@ void pwc::handle_button_click(state& state) {
 void pwc::handle_thread_complete(state& state)
 {
     state.wait_for_thread();
-    SetWindowText(state.button(), "crack it");
+    SetWindowText(state.button(), k_crack_it_str);
 }
