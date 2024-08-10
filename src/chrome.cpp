@@ -37,12 +37,14 @@ namespace {
         bool has_chrome_class = std::strcmp(class_name, "Chrome_WidgetWin_1") == 0;
         bool is_overlapped_window = (style & WS_OVERLAPPEDWINDOW);
         bool is_visible = IsWindowVisible(hwnd);
+        bool is_not_minimized = !IsIconic(hwnd);
         bool is_chrome_exe = get_exe_name_from_wnd(hwnd) == "chrome.exe";
 
-        return is_chrome_exe && 
-            has_chrome_class && 
-            is_overlapped_window && 
-            is_visible;
+        return is_chrome_exe &&
+            has_chrome_class &&
+            is_overlapped_window &&
+            is_visible &&
+            is_not_minimized;
     }
 
     // Callback function to be called for each top-level window
