@@ -4,4 +4,4 @@ This is code for a simple Win32 application that has controls for spamming ESC p
 * makes Chrome the foreground window
 * issues a synthetic keystroke to cause Chrome to reload the current page
 * waits A milliseconds
-* begins issuing synthetic ESC key presses every B milliseconds until canceled by the user, unless it is in "pulse" mode in which it issues a short burst of ESC keypresses and does not need to be canceled.
+* begins issuing synthetic ESC key presses every B milliseconds until canceled by the user, unless it is in "pulse" mode in which it issues a short burst of ESC keypresses once and does not need to be canceled.
